@@ -10,7 +10,7 @@ def main():
 
     # user defined parameter
     c = 0 # camera ID
-    xy = np.array([[1200,2100],[0,0],[2100,0]]) # image coordinates
+    xy = np.array([[1280,1080],[0,0],[2100,0]]) # image coordinates
     
     # plot parameter
     mu = 5 # line of sight:  LOF = P0 + mu*P1 , P0 - position vector , P1 - shift vector , mu - shift scalar
