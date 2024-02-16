@@ -3,10 +3,11 @@ import matplotlib.pyplot as plt
 
 from func import *
 from generateBody import *
+import os
 
-def main():
+def main(parent_path):
     # user defined parameter
-    calibration_path = "calibration/c{cam}/soloff_c{cam}{xy}.txt"
+    calibration_path = os.path.join(parent_path, "calibration/c{cam}/soloff_c{cam}{xy}.txt")
     c = 0 # camera ID
     
     # load calibration of camera c
