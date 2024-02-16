@@ -4,7 +4,10 @@ def F(XYZ, a):
     '''
         soloff polynom
     '''
-    X , Y , Z = XYZ[0] , XYZ[1] , XYZ[2]
+    try:
+        X , Y , Z = XYZ[:,0] , XYZ[:,1] , XYZ[:,2]
+    except:
+        X , Y , Z = XYZ[0] , XYZ[1] , XYZ[2]
     return ( a[0] 
                 + X * ( X*(a[9]*X+a[11]*Y+a[14]*Z+a[4]) + a[13]*Y*Z + a[6]*Y + a[7]*Z + a[1] ) 
                 + Y * ( Y*(a[12]*X+a[10]*Y+a[15]*Z+a[5]) + a[8]*Z + a[2] ) 
@@ -58,12 +61,29 @@ def proPTV_LineOfSight(p,c,Vmin,Vmax,ax,ay):
     '''
         calculate line of sight
     '''
-    P1 = np.array([ (Vmax[0]+Vmin[0])/2, Vmin[1], (Vmax[2]+Vmin[2])/2 ])
-    P2 = np.array([ (Vmax[0]+Vmin[0])/2, Vmax[1], (Vmax[2]+Vmin[2])/2 ])
+    P1 = np.array([ (Vmax[0]+Vmin[0])/2, (Vmax[1]+Vmin[1])/2, Vmin[2] ])
+    P2 = np.array([ (Vmax[0]+Vmin[0])/2, (Vmax[1]+Vmin[1])/2, Vmax[2] ])
+    #P1 = np.array([ (Vmax[0]+Vmin[0])/2, Vmin[1], (Vmax[2]+Vmin[2])/2 ])
+    #P2 = np.array([ (Vmax[0]+Vmin[0])/2, Vmax[1], (Vmax[2]+Vmin[2])/2 ])
     for n in range(5):
         P1 += np.linalg.lstsq(Jacobian_Soloff(P1,[ax],[ay]),-np.array([F(P1,ax)-p[0], F(P1,ay)-p[1]]),rcond=None)[0] 
         P2 += np.linalg.lstsq(Jacobian_Soloff(P2,[ax],[ay]),-np.array([F(P2,ax)-p[0], F(P2,ay)-p[1]]),rcond=None)[0] 
     return np.array([ P2 , P1-P2 ])
+
+def proPTV_LineOfSight_Soloff(p,c,Vmin,Vmax,ax,ay,mode):
+    LOF = []
+    if mode == 0:
+        Ps = np.zeros([30,3])
+        Ps[:,0], Ps[:,1], Ps[:,2] = (Vmax[0]+Vmin[0])/2, (Vmax[1]+Vmin[1])/2, np.linspace(Vmin[2]+4*Vmax[2],Vmax[2],30) 
+    if mode == 1:
+        Ps = np.zeros([2,3])
+        Ps[0,0], Ps[0,1], Ps[0,2] = (Vmax[0]+Vmin[0])/2, Vmin[1], (Vmax[2]+Vmin[2])/2
+        Ps[1,0], Ps[1,1], Ps[1,2] = (Vmax[0]+Vmin[0])/2, Vmax[1], (Vmax[2]+Vmin[2])/2
+    for P in Ps:
+        for n in range(5):
+            P += np.linalg.lstsq(Jacobian_Soloff(P,[ax],[ay]),-np.array([F(P,ax)-p[0], F(P,ay)-p[1]]),rcond=None)[0] 
+        LOF.append(P)
+    return np.asarray(LOF)
 
 def dist_Point_Line(p,P,V):
     u = np.cross(V,P-p)
