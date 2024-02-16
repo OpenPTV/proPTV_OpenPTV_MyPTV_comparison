@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "proptv-openptv-myptv-comparison"
+version = "0.1.0"
+description = "Comparative study of three open source 3D-PTV codes"
+authors = ["Alex Liberzon <alexlib@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "proptv_openptv_myptv_comparison"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+numpy = "^1.26.4"
+scipy = "^1.12.0"
+matplotlib = "^3.8.3"
+ipympl = "^0.9.3"
+jupyter = "^1.0.0"
+ipykernel = "^6.29.2"
+openptv-python = {git = "https://github.com/openptv/openptv-python"}
+myptv = {git = "https://github.com/ronshnapp/MyPTV", branch="extended_zolof_calibration"}
+numba = "^0.59.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
