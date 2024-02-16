@@ -1,6 +1,6 @@
-img/c0_#.tif
-img/c1_#.tif
-img/c2_#.tif
-img/c3_#.tif
-1000
-1100
+img/cam1.%05d
+img/cam2..%05d
+img/cam3.%05d
+img/cam4.%05d
+10001
+10004

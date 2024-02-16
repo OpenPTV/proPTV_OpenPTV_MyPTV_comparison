@@ -1,11 +1,11 @@
 4
-img/c0_1000.tif
+calibration_images/c0/calib_c0_1_00001_gamma.tif
 cal/cam1.tif
-img/c1_1000.tif
+calibration_images/c1/calib_c1_1_00001_gamma.tif
 cal/cam2.tif
-img/c2_1000.tif
+calibration_images/c2/calib_c2_1_00001_gamma.tif
 cal/cam3.tif
-img/c3_1000.tif
+calibration_images/c3/calib_c3_1_00001_gamma.tif
 cal/cam4.tif
 1
 0
