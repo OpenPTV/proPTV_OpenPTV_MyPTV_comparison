@@ -48,8 +48,8 @@ control_parameters = ControlPar().from_file(os.path.join(working_path,"parameter
 volume_parameters = VolumePar().from_file(os.path.join(working_path,"parameters","criteria.par"))
 orient_parameters = OrientPar()
 
-orient_parameters.scxflag = 1 # updated in the future version
-control_parameters.mm = MultimediaPar(nlay=1,n1=1., n2=[1.], d=[1.],n3=1.)
+# orient_parameters.scxflag = 1 # updated in the future version
+# control_parameters.mm = MultimediaPar(nlay=1,n1=1., n2=[1.], d=[1.],n3=1.)
 
 # %%
 # let's check that we get the same points, it's proven before, but let's see
@@ -91,7 +91,9 @@ axis.plot([300,300],[300,300],[0,300],c='black'), axis.plot([300,300],[0,300],[3
 axis.scatter(X, Y, Z, 'o', color='b')
 # axis.plot(X_mid,Y_mid,Z_mid,'o-', color='red', linewidth=1)
 # axis.plot(X_spiral,Y_spiral,Z_spiral,'o-', color='green', linewidth=1)
-plt.tight_layout(), plt.show()   
+plt.tight_layout()
+plt.show()
+
 
 # make projection of lines in cam c
 fig, axis = plt.subplots(2,2, figsize=(10,8))
@@ -121,7 +123,7 @@ for c in range(4):
 
     # axis[int(c/2),c%2].plot(xy[:,0],xy[:,1],'o',c='white')
 
-
+fig.show()
 # %%
 # We need to use reprojections and 3D points to estimate openptv calibration parameters
 # let's go to openptv and see how it can be done without saving the data in some files
@@ -149,8 +151,57 @@ for tix in range(len(all_detected)):
 
 
 # %%
+print(camera_1_calibration.ext_par, camera_1_calibration.int_par)
+
+# now we try to reset calibration and work from zero setup:
+
+camera_1_calibration = Calibration()
+camera_1_calibration.ext_par.x0 = 0
+camera_1_calibration.ext_par.y0 = 0
+camera_1_calibration.ext_par.z0 = 1000.0
+camera_1_calibration.int_par.cc = 100.0
+print(camera_1_calibration.ext_par, camera_1_calibration.int_par)
+
+
+# start with the simplest case: all in air:
+control_parameters.mm = MultimediaPar(nlay=1,n1=1., n2=[1.], d=[1.],n3=1.)
+
+
 outcome = external_calibration(camera_1_calibration, all_known, all_detected, control_parameters)
 assert outcome is True
+print(camera_1_calibration.ext_par, camera_1_calibration.int_par)
+
+
+
+# make projection of lines in cam c
+fig, axis = plt.subplots(2,2, figsize=(10,8))
+
+for c in range(4):
+    
+    
+    # load calibration of camera c
+    ax, ay = np.loadtxt(calibration_path.format(cam=0,xy="x"),delimiter=','), \
+            np.loadtxt(calibration_path.format(cam=0,xy="y"),delimiter=',')
+    
+    # Comment out when you have all calibration parameters
+    # ax, ay = np.loadtxt(calibration_path.format(cam=c,xy="x"),delimiter=','), np.loadtxt(calibration_path.format(cam=c,xy="y"),delimiter=',')
+
+    # estimate projection of the lines in camera c
+    xy = np.vstack([F(np.vstack([X.flat,Y.flat,Z.flat]).T,ax),F(np.vstack([X.flat,Y.flat,Z.flat]).T,ay)]).T
+
+    axis[int(c/2),c%2].set_title('reprojection on camera ' + str(c))
+    axis[int(c/2),c%2].imshow(np.zeros([2160,2560]),cmap='gray')
+    axis[int(c/2),c%2].plot(xy[:,0],xy[:,1],'+',c='white')
+    
+    xy_optv = openptv_project_XYZ_on_camera(np.vstack([X.flat,Y.flat,Z.flat]).T, camera_1_calibration, control_parameters)
+    axis[int(c/2),c%2].plot(xy_optv[:,0],xy_optv[:,1],'x',c='red')
+    
+    # axis[int(c/2),c%2].set_title('reprojection on camera ' + str(c))
+    # axis[int(c/2),c%2].imshow(np.zeros([2160,2560]),cmap='gray')
+
+    # axis[int(c/2),c%2].plot(xy[:,0],xy[:,1],'o',c='white')
+
+fig.show()
 
 # %%
 # Run the multiplane calibration
@@ -158,16 +209,36 @@ residuals, targ_ix, err_est = full_calibration(camera_1_calibration, all_known,
                                                 targs, control_parameters, orient_parameters)
 
 # %%
-camera_1_calibration.ext_par, camera_1_calibration.int_par
+print(camera_1_calibration.ext_par, camera_1_calibration.int_par)
 
+# make projection of lines in cam c
+fig, axis = plt.subplots(2,2, figsize=(10,8))
 
-# %%
-# Save the results
-exp._write_ori(i_cam,
-                addpar_flag=True)  # addpar_flag to save addpar file
-print("End multiplane")
+for c in range(4):
+    
+    
+    # load calibration of camera c
+    ax, ay = np.loadtxt(calibration_path.format(cam=0,xy="x"),delimiter=','), \
+            np.loadtxt(calibration_path.format(cam=0,xy="y"),delimiter=',')
+    
+    # Comment out when you have all calibration parameters
+    # ax, ay = np.loadtxt(calibration_path.format(cam=c,xy="x"),delimiter=','), np.loadtxt(calibration_path.format(cam=c,xy="y"),delimiter=',')
 
-# %%
+    # estimate projection of the lines in camera c
+    xy = np.vstack([F(np.vstack([X.flat,Y.flat,Z.flat]).T,ax),F(np.vstack([X.flat,Y.flat,Z.flat]).T,ay)]).T
 
+    axis[int(c/2),c%2].set_title('reprojection on camera ' + str(c))
+    axis[int(c/2),c%2].imshow(np.zeros([2160,2560]),cmap='gray')
+    axis[int(c/2),c%2].plot(xy[:,0],xy[:,1],'+',c='white')
+    
+    xy_optv = openptv_project_XYZ_on_camera(np.vstack([X.flat,Y.flat,Z.flat]).T, camera_1_calibration, control_parameters)
+    axis[int(c/2),c%2].plot(xy_optv[:,0],xy_optv[:,1],'x',c='red')
+    
+    # axis[int(c/2),c%2].set_title('reprojection on camera ' + str(c))
+    # axis[int(c/2),c%2].imshow(np.zeros([2160,2560]),cmap='gray')
 
+    # axis[int(c/2),c%2].plot(xy[:,0],xy[:,1],'o',c='white')
 
+fig.show()
+
+print('Finished')
