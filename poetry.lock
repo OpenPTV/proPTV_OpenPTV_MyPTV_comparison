@@ -1782,7 +1782,7 @@ files = [
 
 [[package]]
 name = "openptv-python"
-version = "0.0.3.dev4+g97a9b32"
+version = "0.0.3.dev4+g97a9b32.d20240322"
 description = "Python version of the OpenPTV library"
 optional = false
 python-versions = "*"
