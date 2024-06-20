@@ -1,12 +1,12 @@
 cal/plane_1.csv
 calibration_images/c0/calib_c0_5_00001_gamma.tif
-cal/cam1.tif.ori
+calibration/cam1.tif.ori
 calibration_images/c1/calib_c1_5_00001_gamma.tif
-cal/cam2.tif.ori
+calibration/cam2.tif.ori
 calibration_images/c2/calib_c2_5_00001_gamma.tif
-cal/cam3.tif.ori
+calibration/cam3.tif.ori
 calibration_images/c3/calib_c3_5_00001_gamma.tif
-cal/cam4.tif.ori
+calibration/cam4.tif.ori
 1
 0
 0
