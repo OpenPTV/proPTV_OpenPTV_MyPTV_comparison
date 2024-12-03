@@ -1,6 +1,6 @@
-img/cam1.%05d
-img/cam2..%05d
-img/cam3.%05d
-img/cam4.%05d
-10001
-10004
+newimg/B000%d_a.tiff
+newimg/B000%d_b.tiff
+newimg/B000%d_c.tiff
+newimg/B000%d_d.tiff
+477
+576
