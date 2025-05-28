@@ -48,7 +48,7 @@ Dear all,
 
  
 
-you can download the dataset at: https://gigamove.rwth-aachen.de/de/download/6b22d91cb7fb50f7278cec8b45be23a3
+you can download the dataset at: 
 
  
 
@@ -70,3 +70,29 @@ The calibration information are found in calibration_images/markers_ci.txt conta
 
 The camera setup is the same as in our last project. Besides that the length of the cube is 500mm and X is the depth direction.
 
+
+### Smaller data 
+
+
+ 
+
+It covers 949 particles over 20 frames in a volume of 300x300x300 mm over 9.12 seconds. Same setup as before.
+
+The maximum expected velocity is 5 mm/s and dt=0.48 seconds is the time between frames.
+
+ 
+
+We can increase the frequency but I think we will not observe any tracking problems when the frequency is too high.
+
+
+I only took particles that stay in a sphere of 30mm diameter around the middle of the cell during the investigated time window, which are 949 particles.  -> see 949_particles/tracks.origin.tif for an image of all tracks
+
+ 
+
+As before, you find the particle 3D data in the 949_particles/origin/origin_{time}.txt files.
+
+They include rows: # ID X Y Z x0 y0 x1 y1 x2 y2 x3 y3 , were xi yi correspond to the camera position on camera i.
+
+ 
+
+The particle images can be found in 949_particles/particle_images/ci/ci_{time}.tif for camera i. In the folder also a video of the camera images is included for every camera.
