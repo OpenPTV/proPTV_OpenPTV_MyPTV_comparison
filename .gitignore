@@ -152,3 +152,4 @@ cython_debug/
 #.idea/
 .vscode/PythonImportHelper-v2-Completion.json
 .vscode/settings.json
+/OpenPTV_LineOfSight/notebooks/__marimo__
