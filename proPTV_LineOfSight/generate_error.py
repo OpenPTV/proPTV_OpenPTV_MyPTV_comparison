@@ -2,7 +2,6 @@ import matplotlib.pyplot as plt
 import numpy as np 
 from soloff import *
 from scipy.optimize import least_squares
-from SaveLoad import *
 
 
 class Parameter:
@@ -17,8 +16,8 @@ params = Parameter()
 markers = [np.loadtxt('markers_c'+str(cam)+'.txt') for cam in params.cams]
 XYZ = markers[0][:,2:]
 
-#ID = np.argwhere((XYZ[:,0]<200) & (XYZ[:,0]>100) & (XYZ[:,1]<200) & (XYZ[:,1]>100))[:,0]
-ID = np.argwhere((XYZ[:,0]>-1))[:,0]
+ID = np.argwhere((XYZ[:,0]<200) & (XYZ[:,0]>100) & (XYZ[:,1]<200) & (XYZ[:,1]>100))[:,0]
+#ID = np.argwhere((XYZ[:,0]>-1))[:,0]
 
 # generate calibration
 ax, ay = [], []
@@ -39,28 +38,14 @@ camPs = [ np.asarray([markers[0][i,:2],markers[1][i,:2],markers[2][i,:2],markers
 P = np.asarray([NewtonSoloff_Triangulation(setP, ax, ay, params)[0] for setP in camPs])
 
 # compare error
-error = XYZ-P
-output = np.zeros([361*5,8+3+3])
-for i in range(len(params.cams)):
-    output[:,2*i:2*(i+1)] = np.loadtxt('markers_c'+str(params.cams[i])+'.txt')[:,:2]
-output[:,8:11] = XYZ
-output[:,11:] = error
-SaveMarkerList(output)
-
-err = np.linalg.norm(error,axis=1)
+err = np.linalg.norm(XYZ-P,axis=1)
 mean_err = np.mean(err)
 std_err = np.std(err)
 print('MAE: ', mean_err, ' +- ' , std_err )
 
 axis = plt.figure().add_subplot(111, projection='3d')
-axis.scatter(P[:,2], P[:,0], P[:,1],c='red',s=5)
-axis.scatter(XYZ[ID,2], XYZ[ID,0], XYZ[ID,1],c='black',s=5)
-axis.set_xlabel('Z',fontsize=13), axis.set_ylabel('X',fontsize=13), axis.set_zlabel('Y',fontsize=13)
-plt.tight_layout()
-plt.show()
-
-axis = plt.figure().add_subplot(111, projection='3d')
-axis.quiver(P[:,2],P[:,0],P[:,1], P[:,2]-XYZ[ID,2], P[:,0]-XYZ[ID,0], P[:,1]-XYZ[ID,1],color='red',length=10,normalize=True)
+axis.scatter(P[:,2], P[:,0], P[:,1],c='red',s=1)
+axis.scatter(XYZ[ID,2], XYZ[ID,0], XYZ[ID,1],c='black',s=10)
 axis.set_xlabel('Z',fontsize=13), axis.set_ylabel('X',fontsize=13), axis.set_zlabel('Y',fontsize=13)
 plt.tight_layout()
 plt.show()
