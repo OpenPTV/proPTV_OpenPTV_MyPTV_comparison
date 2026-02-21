@@ -4,4 +4,11 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "marimo>=0.20.1",
+    "opencv-python-headless>=4.11.0.86",
+    "optv>=0.3.1",
+    "pyptv>=0.4.0",
+    "pyzmq>=27.1.0",
+    "scipy>=1.17.0",
+]
